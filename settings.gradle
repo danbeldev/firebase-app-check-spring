@@ -1,2 +1,2 @@
 rootProject.name = 'firebase-app-check-spring'
-include 'firebase-appcheck-spring-boot-starter', 'samples'
+include 'library', 'samples'
