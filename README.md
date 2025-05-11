@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Last commit](https://img.shields.io/github/last-commit/danbeldev/firebase-app-check-spring)
 
-Spring Boot Starter для интеграции Firebase App Check, обеспечивающий защиту ваших API endpoints.
+Spring Boot Starter для интеграции [Firebase App Check](https://firebase.google.com/docs/app-check), обеспечивающий защиту ваших API endpoints.
 
 ## Особенности
 
