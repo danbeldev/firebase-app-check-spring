@@ -1,1 +1,3 @@
-spring.application.name=firebase-app-check-spring
+spring:
+  application:
+    name: firebase-app-check-spring

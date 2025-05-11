@@ -1,6 +1,6 @@
-package com.github.danbel.spring.firebase.appcheck.common;
+package com.github.danbel.spring.firebase.appcheck.controllers;
 
-import com.github.danbel.spring.firebase.appcheck.annotations.RequireFirebaseAppCheck;
+import com.github.danbel.spring.firebase.appcheck.core.annotations.RequireFirebaseAppCheck;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
