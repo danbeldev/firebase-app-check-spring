@@ -1,0 +1,63 @@
+site_name: Firebase App Check Spring Docs
+repo_url: https://github.com/danbeldev/firebase-app-check-spring
+repo_name: danbeldev/firebase-app-check-spring
+copyright: Copyright &copy; 2025 Danila Belyakov | <a href="https://github.com/danbeldev/firebase-app-check-spring/blob/master/LICENSE">Лицензия</a>
+
+extra_css:
+  - stylesheets/style.css
+
+theme:
+  name: material
+  language: ru
+  logo: assets/logo.png
+  favicon: assets/logo.png
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: white
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to light mode
+  features:
+    - header.autohide
+    - navigation.expand
+    - navigation.top
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+
+extra:
+  generator: true
+  social:
+    - icon: fontawesome/solid/paper-plane
+      link: mailto:dan.bel.89@bk.ru
+    - icon: fontawesome/brands/hacker-news
+      link: https://habr.com/ru/users/danbel/
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.blocks.caption
+
+
+nav:
+  - Добро пожаловать: index.md
