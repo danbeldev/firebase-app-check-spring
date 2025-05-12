@@ -1,12 +1,15 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     id 'java'
     id 'jacoco'
     id 'org.springframework.boot' version '3.4.5'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.vanniktech.maven.publish' version '0.28.0'
 }
 
 group = 'com.github.danbel'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 
 java {
     toolchain {
@@ -47,4 +50,47 @@ jacocoTestReport {
         xml.required = true
         html.required = true
     }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            groupId = "io.github.danbeldev"
+            artifactId = "firebase-app-check-spring-boot-starter"
+            version = "0.0.1"
+
+            pom {
+                name = "firebase-app-check-spring"
+                description = "Spring Boot Starter для интеграции Firebase App Check"
+                inceptionYear = "2024"
+                url = "https://github.com/danbeldev/firebase-app-check-spring"
+
+                licenses {
+                    license {
+                        name = "MIT"
+                        url = "https://opensource.org/licenses/MIT"
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = "danbel"
+                        name = "Danila Belyakov"
+                        email = "dan.bel.89@bk.ru"
+                    }
+                }
+
+                scm {
+                    url = "https://github.com/danbeldev/firebase-app-check-spring"
+                }
+            }
+        }
+    }
+}
+
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    signAllPublications()
 }

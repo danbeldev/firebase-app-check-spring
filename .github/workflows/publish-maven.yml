@@ -1,0 +1,48 @@
+name: Publish to Maven Central
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Install GPG
+        run: sudo apt-get install -y gnupg
+
+      - name: Create GPG directory
+        run: mkdir -p ~/.gnupg
+
+      - name: Import GPG key
+        run: |
+          echo "${{ secrets.GPG_SECRET_KEY }}" | gpg --dearmor > ~/.gnupg/secring.gpg
+        env:
+          GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
+
+      - name: Restore gradle.properties
+        run: |
+          mkdir -p ~/.gradle/
+          echo "mavenCentralUsername=${{ secrets.MAVEN_CENTRAL_USERNAME }}" >> ~/.gradle/gradle.properties
+          echo "mavenCentralPassword=${{ secrets.MAVEN_CENTRAL_PASSWORD }}" >> ~/.gradle/gradle.properties
+          echo "signing.keyId=${{ secrets.SIGNING_KEY_ID }}" >> ~/.gradle/gradle.properties
+          echo "signing.secretKeyRingFile=$(realpath ~/.gnupg/secring.gpg)" >> ~/.gradle/gradle.properties
+          echo "signing.password=${{ secrets.SIGNING_PASSWORD }}" >> ~/.gradle/gradle.properties
+
+      - name: Set up Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Publish to Maven Central
+        run: ./gradlew publish --warning-mode all --stacktrace
