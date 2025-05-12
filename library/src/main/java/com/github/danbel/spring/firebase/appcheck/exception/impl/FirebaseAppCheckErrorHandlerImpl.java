@@ -1,7 +1,7 @@
 package com.github.danbel.spring.firebase.appcheck.exception.impl;
 
 import com.github.danbel.spring.firebase.appcheck.exception.FirebaseAppCheckErrorHandler;
-import com.github.danbel.spring.firebase.appcheck.exception.properties.FirebaseAppCheckErrorMessages;
+import com.github.danbel.spring.firebase.appcheck.exception.properties.FirebaseAppCheckErrorProperties;
 import com.github.danbel.spring.firebase.appcheck.exception.model.FirebaseAppCheckException;
 import com.github.danbel.spring.firebase.appcheck.exception.model.FirebaseAppCheckFetchPublicKeyException;
 import com.github.danbel.spring.firebase.appcheck.exception.model.FirebaseAppCheckVerifyJwtException;
@@ -14,10 +14,10 @@ import java.io.IOException;
 
 public class FirebaseAppCheckErrorHandlerImpl implements FirebaseAppCheckErrorHandler {
 
-    private final FirebaseAppCheckErrorMessages firebaseAppCheckErrorMessages;
+    private final FirebaseAppCheckErrorProperties firebaseAppCheckErrorProperties;
 
-    public FirebaseAppCheckErrorHandlerImpl(FirebaseAppCheckErrorMessages firebaseAppCheckErrorMessages) {
-        this.firebaseAppCheckErrorMessages = firebaseAppCheckErrorMessages;
+    public FirebaseAppCheckErrorHandlerImpl(FirebaseAppCheckErrorProperties firebaseAppCheckErrorProperties) {
+        this.firebaseAppCheckErrorProperties = firebaseAppCheckErrorProperties;
     }
 
     @Override
@@ -34,76 +34,76 @@ public class FirebaseAppCheckErrorHandlerImpl implements FirebaseAppCheckErrorHa
                 FirebaseAppCheckFetchPublicKeyErrorType errorType = fetchPublicKeyException.getErrorType();
                 switch (errorType) {
                     case SIGNING_KEY_NOT_FOUND -> {
-                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        writeTextError(response, firebaseAppCheckErrorMessages.getSigningKeyNotFound());
+                        response.setStatus(firebaseAppCheckErrorProperties.getSigningKeyNotFound().getStatus());
+                        writeTextError(response, firebaseAppCheckErrorProperties.getSigningKeyNotFound().getMessage());
                     }
                     case NETWORK_ERROR -> {
-                        response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
-                        writeTextError(response, firebaseAppCheckErrorMessages.getNetworkError());
+                        response.setStatus(firebaseAppCheckErrorProperties.getNetworkError().getStatus());
+                        writeTextError(response, firebaseAppCheckErrorProperties.getNetworkError().getMessage());
                     }
                     case RATE_LIMIT_REACHED -> {
-                        response.setStatus(429);
-                        writeTextError(response, firebaseAppCheckErrorMessages.getRateLimitReached());
+                        response.setStatus(firebaseAppCheckErrorProperties.getRateLimitReached().getStatus());
+                        writeTextError(response, firebaseAppCheckErrorProperties.getRateLimitReached().getMessage());
                     }
                     case JWK_PROCESSING_ERROR -> {
-                        response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
-                        writeTextError(response, firebaseAppCheckErrorMessages.getJwkProcessingError());
+                        response.setStatus(firebaseAppCheckErrorProperties.getJwkProcessingError().getStatus());
+                        writeTextError(response, firebaseAppCheckErrorProperties.getJwkProcessingError().getMessage());
                     }
                     case UNKNOWN_ERROR -> {
-                        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                        writeTextError(response, firebaseAppCheckErrorMessages.getUnknownPublicKeyError());
+                        response.setStatus(firebaseAppCheckErrorProperties.getUnknownPublicKeyError().getStatus());
+                        writeTextError(response, firebaseAppCheckErrorProperties.getUnknownPublicKeyError().getMessage());
                     }
                 }
             } else if (e instanceof FirebaseAppCheckVerifyJwtException verifyJwtException) {
                 FirebaseAppCheckVerifyJwtErrorType errorType = verifyJwtException.getErrorType();
                 switch (errorType) {
                     case TOKEN_EXPIRED -> {
-                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        writeTextError(response, firebaseAppCheckErrorMessages.getTokenExpired());
+                        response.setStatus(firebaseAppCheckErrorProperties.getTokenExpired().getStatus());
+                        writeTextError(response, firebaseAppCheckErrorProperties.getTokenExpired().getMessage());
                     }
                     case INVALID_TOKEN -> {
-                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        writeTextError(response, firebaseAppCheckErrorMessages.getInvalidToken());
+                        response.setStatus(firebaseAppCheckErrorProperties.getInvalidToken().getStatus());
+                        writeTextError(response, firebaseAppCheckErrorProperties.getInvalidToken().getMessage());
                     }
                     case INVALID_TOKEN_TYPE -> {
-                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        writeTextError(response, firebaseAppCheckErrorMessages.getInvalidTokenType());
+                        response.setStatus(firebaseAppCheckErrorProperties.getInvalidTokenType().getStatus());
+                        writeTextError(response, firebaseAppCheckErrorProperties.getInvalidTokenType().getMessage());
                     }
                     case INVALID_SIGNATURE -> {
-                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        writeTextError(response, firebaseAppCheckErrorMessages.getInvalidSignature());
+                        response.setStatus(firebaseAppCheckErrorProperties.getInvalidSignature().getStatus());
+                        writeTextError(response, firebaseAppCheckErrorProperties.getInvalidSignature().getMessage());
                     }
                     case MISSING_REQUIRED_CLAIM -> {
-                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        writeTextError(response, firebaseAppCheckErrorMessages.getMissingRequiredClaim());
+                        response.setStatus(firebaseAppCheckErrorProperties.getMissingRequiredClaim().getStatus());
+                        writeTextError(response, firebaseAppCheckErrorProperties.getMissingRequiredClaim().getMessage());
                     }
                     case INVALID_CLAIM_VALUE -> {
-                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        writeTextError(response, firebaseAppCheckErrorMessages.getInvalidClaimValue());
+                        response.setStatus(firebaseAppCheckErrorProperties.getInvalidClaimValue().getStatus());
+                        writeTextError(response, firebaseAppCheckErrorProperties.getInvalidClaimValue().getMessage());
                     }
                     case UNSUPPORTED_ALGORITHM -> {
-                        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                        writeTextError(response, firebaseAppCheckErrorMessages.getUnsupportedAlgorithm());
+                        response.setStatus(firebaseAppCheckErrorProperties.getUnsupportedAlgorithm().getStatus());
+                        writeTextError(response, firebaseAppCheckErrorProperties.getUnsupportedAlgorithm().getMessage());
                     }
                     case GENERIC_JWT_VERIFICATION_ERROR -> {
-                        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                        writeTextError(response, firebaseAppCheckErrorMessages.getGenericJwtVerificationError());
+                        response.setStatus(firebaseAppCheckErrorProperties.getGenericJwtVerificationError().getStatus());
+                        writeTextError(response, firebaseAppCheckErrorProperties.getGenericJwtVerificationError().getMessage());
                     }
                     case JWT_VERIFICATION_FAILED -> {
-                        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                        writeTextError(response, firebaseAppCheckErrorMessages.getJwtVerificationFailed());
+                        response.setStatus(firebaseAppCheckErrorProperties.getJwtVerificationFailed().getStatus());
+                        writeTextError(response, firebaseAppCheckErrorProperties.getJwtVerificationFailed().getMessage());
                     }
                     case UNKNOWN_ERROR -> {
-                        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                        writeTextError(response, firebaseAppCheckErrorMessages.getUnknownVerifyJwtError());
+                        response.setStatus(firebaseAppCheckErrorProperties.getUnknownVerifyJwtError().getStatus());
+                        writeTextError(response, firebaseAppCheckErrorProperties.getUnknownVerifyJwtError().getMessage());
                     }
                 }
             } else if (e instanceof FirebaseAppCheckException) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                writeTextError(response, firebaseAppCheckErrorMessages.getGenericUnauthorized());
+                response.setStatus(firebaseAppCheckErrorProperties.getGenericUnauthorized().getStatus());
+                writeTextError(response, firebaseAppCheckErrorProperties.getGenericUnauthorized().getMessage());
             } else {
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                writeTextError(response, firebaseAppCheckErrorMessages.getGenericInternalError());
+                response.setStatus(firebaseAppCheckErrorProperties.getGenericInternalError().getStatus());
+                writeTextError(response, firebaseAppCheckErrorProperties.getGenericInternalError().getMessage());
             }
 
         } catch (IOException ignored) {}
