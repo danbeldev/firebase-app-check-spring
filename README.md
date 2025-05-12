@@ -14,6 +14,7 @@ Spring Boot Starter для интеграции [Firebase App Check](https://fir
 - Поддержка программного добавления защищаемых маршрутов
 
 ## Материалы
+- [Документация](https://danbeldev.github.io/firebase-app-check-spring/)
 - [Примеры](https://github.com/danbeldev/firebase-app-check-spring/tree/master/samples/src/main/java/com/github/danbel/samples)
 
 ## Лицензия
