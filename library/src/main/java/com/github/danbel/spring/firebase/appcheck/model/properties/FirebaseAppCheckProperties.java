@@ -69,16 +69,6 @@ public class FirebaseAppCheckProperties {
      */
     private FirebaseAppCheckCallback afterSecurityCheck;
 
-    /**
-     * Обработчик ошибок для App Check.
-     */
-    private FirebaseAppCheckErrorHandler errorHandler = new FirebaseAppCheckErrorHandlerImpl();
-
-    /**
-     * Сервис проверки токена Firebase App Check.
-     */
-    private FirebaseAppCheckTokenVerifierService tokenVerifierService = new FirebaseAppCheckTokenVerifierServiceImpl();
-
     @PostConstruct
     public void init() {
         if (publicKeyUrl == null || publicKeyUrl.isEmpty()) {
@@ -130,14 +120,6 @@ public class FirebaseAppCheckProperties {
         return afterSecurityCheck;
     }
 
-    public FirebaseAppCheckErrorHandler getErrorHandler() {
-        return errorHandler;
-    }
-
-    public FirebaseAppCheckTokenVerifierService getTokenVerifierService() {
-        return tokenVerifierService;
-    }
-
     public void setProjectId(String projectId) {
         this.projectId = projectId;
     }
@@ -176,13 +158,5 @@ public class FirebaseAppCheckProperties {
 
     public void setAfterSecurityCheck(FirebaseAppCheckCallback afterSecurityCheck) {
         this.afterSecurityCheck = afterSecurityCheck;
-    }
-
-    public void setErrorHandler(FirebaseAppCheckErrorHandler errorHandler) {
-        this.errorHandler = errorHandler;
-    }
-
-    public void setTokenVerifierService(FirebaseAppCheckTokenVerifierService tokenVerifierService) {
-        this.tokenVerifierService = tokenVerifierService;
     }
 }

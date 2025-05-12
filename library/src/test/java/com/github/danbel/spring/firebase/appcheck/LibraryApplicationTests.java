@@ -1,12 +1,10 @@
 package com.github.danbel.spring.firebase.appcheck;
 
 import com.github.danbel.spring.firebase.appcheck.common.TestConstants;
-import com.github.danbel.spring.firebase.appcheck.exception.FirebaseAppCheckErrorHandler;
-import com.github.danbel.spring.firebase.appcheck.exception.impl.FirebaseAppCheckErrorHandlerImpl;
+import com.github.danbel.spring.firebase.appcheck.config.FirebaseAppCheckConfig;
 import com.github.danbel.spring.firebase.appcheck.model.properties.FirebaseAppCheckCallback;
 import com.github.danbel.spring.firebase.appcheck.model.properties.FirebaseAppCheckProperties;
 import com.github.danbel.spring.firebase.appcheck.model.properties.FirebaseAppCheckSecureStrategy;
-import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,6 +12,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -23,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Import(FirebaseAppCheckConfig.class)
 class LibraryApplicationTests {
 
     @Autowired
@@ -41,7 +41,6 @@ class LibraryApplicationTests {
         properties.getRoutes().clear();
         properties.addRoute(HttpMethod.POST, "/route");
         properties.setAdditionalSecurityCheck(null);
-        properties.setErrorHandler(new FirebaseAppCheckErrorHandlerImpl());
     }
 
     @Nested
@@ -183,32 +182,6 @@ class LibraryApplicationTests {
                     .andExpect(status().isOk());
 
             Mockito.verify(firebaseAppCheckCallback, Mockito.times(1)).execute(Mockito.any());
-        }
-    }
-
-    @Nested
-    class ErrorHandlerTests {
-        @Test
-        void customErrorHandler_shouldBeCalledOnError() throws Exception {
-            var errorHandler = Mockito.mock(FirebaseAppCheckErrorHandler.class);
-            properties.setErrorHandler(errorHandler);
-
-            mockMvc.perform(post("/route")).andExpect(status().isOk());
-
-            Mockito.verify(errorHandler, Mockito.times(1))
-                    .handle(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
-        }
-
-        @Test
-        void customErrorHandlerCanChangeResponseStatus() throws Exception {
-            FirebaseAppCheckErrorHandler errorHandler =
-                    (e, errorType, request, response, handler) -> {
-                        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                        return false;
-                    };
-            properties.setErrorHandler(errorHandler);
-
-            mockMvc.perform(post("/route")).andExpect(status().isInternalServerError());
         }
     }
 }

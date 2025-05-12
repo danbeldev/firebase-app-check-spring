@@ -1,17 +1,23 @@
 package com.github.danbel.spring.firebase.appcheck.exception.model;
 
-import com.github.danbel.spring.firebase.appcheck.exception.types.FirebaseAppCheckErrorType;
-
+/**
+ * Базовое исключение для ошибок, связанных с верификацией Firebase App Check.
+ */
 public class FirebaseAppCheckException extends RuntimeException {
 
-    public final FirebaseAppCheckErrorType errorType;
-
-    public FirebaseAppCheckException(String message, FirebaseAppCheckErrorType errorType) {
-        super(message);
-        this.errorType = errorType;
+    /**
+     * Создаёт исключение без сообщения.
+     */
+    public FirebaseAppCheckException() {
+        super();
     }
 
-    public FirebaseAppCheckErrorType getErrorType() {
-        return errorType;
+    /**
+     * Создаёт исключение с указанным сообщением.
+     *
+     * @param message описание ошибки
+     */
+    public FirebaseAppCheckException(String message) {
+        super(message);
     }
 }

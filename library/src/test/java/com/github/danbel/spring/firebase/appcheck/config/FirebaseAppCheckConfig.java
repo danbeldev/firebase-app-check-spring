@@ -1,23 +1,23 @@
 package com.github.danbel.spring.firebase.appcheck.config;
 
+import com.github.danbel.spring.firebase.appcheck.common.FirebaseAppCheckTokenVerifierServiceMock;
 import com.github.danbel.spring.firebase.appcheck.core.interceptors.FirebaseAppCheckInterceptor;
 import com.github.danbel.spring.firebase.appcheck.core.services.FirebaseAppCheckTokenVerifierService;
-import com.github.danbel.spring.firebase.appcheck.core.services.impl.FirebaseAppCheckTokenVerifierServiceImpl;
 import com.github.danbel.spring.firebase.appcheck.exception.FirebaseAppCheckErrorHandler;
 import com.github.danbel.spring.firebase.appcheck.exception.impl.FirebaseAppCheckErrorHandlerImpl;
 import com.github.danbel.spring.firebase.appcheck.exception.properties.FirebaseAppCheckErrorMessages;
 import com.github.danbel.spring.firebase.appcheck.model.properties.FirebaseAppCheckProperties;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
-@Configuration
+@TestConfiguration
 @EnableConfigurationProperties({FirebaseAppCheckProperties.class, FirebaseAppCheckErrorMessages.class})
 public class FirebaseAppCheckConfig {
 
     @Bean
-    @ConditionalOnMissingBean(FirebaseAppCheckErrorHandler.class)
+    @Primary
     public FirebaseAppCheckErrorHandler firebaseAppCheckErrorHandler(
             FirebaseAppCheckErrorMessages firebaseAppCheckErrorMessages
     ) {
@@ -25,13 +25,13 @@ public class FirebaseAppCheckConfig {
     }
 
     @Bean
-    @ConditionalOnMissingBean(FirebaseAppCheckTokenVerifierService.class)
+    @Primary
     public FirebaseAppCheckTokenVerifierService firebaseAppCheckTokenVerifierService() {
-        return new FirebaseAppCheckTokenVerifierServiceImpl();
+        return new FirebaseAppCheckTokenVerifierServiceMock();
     }
 
     @Bean
-    @ConditionalOnMissingBean(FirebaseAppCheckInterceptor.class)
+    @Primary
     public FirebaseAppCheckInterceptor firebaseAppCheckInterceptor(
             FirebaseAppCheckProperties properties,
             FirebaseAppCheckErrorHandler firebaseAppCheckErrorHandler,

@@ -9,8 +9,9 @@ import com.auth0.jwt.interfaces.JWTVerifier;
 import com.github.danbel.spring.firebase.appcheck.config.security.FetchFirebaseAppCheckPublicKeyConfig;
 import com.github.danbel.spring.firebase.appcheck.exception.model.FirebaseAppCheckFetchPublicKeyException;
 import com.github.danbel.spring.firebase.appcheck.exception.model.FirebaseAppCheckVerifyJwtException;
+import com.github.danbel.spring.firebase.appcheck.exception.types.FirebaseAppCheckFetchPublicKeyErrorType;
+import com.github.danbel.spring.firebase.appcheck.exception.types.FirebaseAppCheckVerifyJwtErrorType;
 import com.github.danbel.spring.firebase.appcheck.model.DecodedJwt;
-import com.github.danbel.spring.firebase.appcheck.exception.types.FirebaseAppCheckErrorType;
 import com.github.danbel.spring.firebase.appcheck.core.services.FirebaseAppCheckTokenVerifierService;
 
 import java.net.URL;
@@ -87,27 +88,60 @@ public class FirebaseAppCheckTokenVerifierServiceImpl implements FirebaseAppChec
             return jwkProvider.get(kid).getPublicKey();
 
         } catch (NetworkException e) {
-            throw new FirebaseAppCheckFetchPublicKeyException(e.getMessage(), FirebaseAppCheckErrorType.NetworkError);
+            throw new FirebaseAppCheckFetchPublicKeyException(
+                    e.getMessage(),
+                    FirebaseAppCheckFetchPublicKeyErrorType.NETWORK_ERROR
+            );
         } catch (SigningKeyNotFoundException e) {
-            throw new FirebaseAppCheckFetchPublicKeyException(e.getMessage(), FirebaseAppCheckErrorType.SigningKeyNotFound);
+            throw new FirebaseAppCheckFetchPublicKeyException(
+                    e.getMessage(),
+                    FirebaseAppCheckFetchPublicKeyErrorType.SIGNING_KEY_NOT_FOUND
+            );
         } catch (RateLimitReachedException e) {
-            throw new FirebaseAppCheckFetchPublicKeyException(e.getMessage(), FirebaseAppCheckErrorType.RateLimitReached);
+            throw new FirebaseAppCheckFetchPublicKeyException(
+                    e.getMessage(),
+                    FirebaseAppCheckFetchPublicKeyErrorType.RATE_LIMIT_REACHED
+            );
         } catch (JwkException e) {
-            throw new FirebaseAppCheckFetchPublicKeyException(e.getMessage(), FirebaseAppCheckErrorType.JwkError);
+            throw new FirebaseAppCheckFetchPublicKeyException(
+                    e.getMessage(),
+                    FirebaseAppCheckFetchPublicKeyErrorType.JWK_PROCESSING_ERROR
+            );
         } catch (JWTDecodeException e) {
-            throw new FirebaseAppCheckVerifyJwtException(e.getMessage(), FirebaseAppCheckErrorType.TokenIsNotValid);
+            throw new FirebaseAppCheckVerifyJwtException(
+                    e.getMessage(),
+                    FirebaseAppCheckVerifyJwtErrorType.INVALID_TOKEN
+            );
         } catch (AlgorithmMismatchException e) {
-            throw new FirebaseAppCheckVerifyJwtException(e.getMessage(), FirebaseAppCheckErrorType.TokenAlgorithmIsNotCorrect);
+            throw new FirebaseAppCheckVerifyJwtException(
+                    e.getMessage(),
+                    FirebaseAppCheckVerifyJwtErrorType.UNSUPPORTED_ALGORITHM
+            );
         } catch (SignatureVerificationException e) {
-            throw new FirebaseAppCheckVerifyJwtException(e.getMessage(), FirebaseAppCheckErrorType.TokenSignatureVerificationInvalid);
+            throw new FirebaseAppCheckVerifyJwtException(
+                    e.getMessage(),
+                    FirebaseAppCheckVerifyJwtErrorType.INVALID_SIGNATURE
+            );
         } catch (MissingClaimException e) {
-            throw new FirebaseAppCheckVerifyJwtException(e.getMessage(), FirebaseAppCheckErrorType.TokenMissingClaim);
+            throw new FirebaseAppCheckVerifyJwtException(
+                    e.getMessage(),
+                    FirebaseAppCheckVerifyJwtErrorType.MISSING_REQUIRED_CLAIM
+            );
         } catch (IncorrectClaimException e) {
-            throw new FirebaseAppCheckVerifyJwtException(e.getMessage(), FirebaseAppCheckErrorType.TokenIncorrectClaim);
+            throw new FirebaseAppCheckVerifyJwtException(
+                    e.getMessage(),
+                    FirebaseAppCheckVerifyJwtErrorType.INVALID_CLAIM_VALUE
+            );
         } catch (JWTVerificationException e) {
-            throw new FirebaseAppCheckVerifyJwtException(e.getMessage(), FirebaseAppCheckErrorType.GenericJwtVerificationError);
+            throw new FirebaseAppCheckVerifyJwtException(
+                    e.getMessage(),
+                    FirebaseAppCheckVerifyJwtErrorType.JWT_VERIFICATION_FAILED
+            );
         } catch (Exception e) {
-            throw new FirebaseAppCheckFetchPublicKeyException(e.getMessage(), FirebaseAppCheckErrorType.UnknownError);
+            throw new FirebaseAppCheckFetchPublicKeyException(
+                    e.getMessage(),
+                    FirebaseAppCheckFetchPublicKeyErrorType.UNKNOWN_ERROR
+            );
         }
     }
 
@@ -141,28 +175,52 @@ public class FirebaseAppCheckTokenVerifierServiceImpl implements FirebaseAppChec
             if (!"JWT".equals(tokenHeader)) {
                 throw new FirebaseAppCheckVerifyJwtException(
                         "The token header of value " + tokenHeader + " is not equal to 'JWT'",
-                        FirebaseAppCheckErrorType.HeaderTypeIsNotJwt
+                        FirebaseAppCheckVerifyJwtErrorType.INVALID_TOKEN_TYPE
                 );
             }
 
             return new DecodedJwt(decodedJwt.getToken());
 
         } catch (TokenExpiredException e) {
-            throw new FirebaseAppCheckVerifyJwtException(e.getMessage(), FirebaseAppCheckErrorType.TokenExpired);
+            throw new FirebaseAppCheckVerifyJwtException(
+                    e.getMessage(),
+                    FirebaseAppCheckVerifyJwtErrorType.TOKEN_EXPIRED
+            );
         } catch (JWTDecodeException e) {
-            throw new FirebaseAppCheckVerifyJwtException(e.getMessage(), FirebaseAppCheckErrorType.TokenIsNotValid);
+            throw new FirebaseAppCheckVerifyJwtException(
+                    e.getMessage(),
+                    FirebaseAppCheckVerifyJwtErrorType.INVALID_TOKEN
+            );
         } catch (AlgorithmMismatchException e) {
-            throw new FirebaseAppCheckVerifyJwtException(e.getMessage(), FirebaseAppCheckErrorType.TokenAlgorithmIsNotCorrect);
+            throw new FirebaseAppCheckVerifyJwtException(
+                    e.getMessage(),
+                    FirebaseAppCheckVerifyJwtErrorType.UNSUPPORTED_ALGORITHM
+            );
         } catch (SignatureVerificationException e) {
-            throw new FirebaseAppCheckVerifyJwtException(e.getMessage(), FirebaseAppCheckErrorType.TokenSignatureVerificationInvalid);
+            throw new FirebaseAppCheckVerifyJwtException(
+                    e.getMessage(),
+                    FirebaseAppCheckVerifyJwtErrorType.INVALID_SIGNATURE
+            );
         } catch (MissingClaimException e) {
-            throw new FirebaseAppCheckVerifyJwtException(e.getMessage(), FirebaseAppCheckErrorType.TokenMissingClaim);
+            throw new FirebaseAppCheckVerifyJwtException(
+                    e.getMessage(),
+                    FirebaseAppCheckVerifyJwtErrorType.MISSING_REQUIRED_CLAIM
+            );
         } catch (IncorrectClaimException e) {
-            throw new FirebaseAppCheckVerifyJwtException(e.getMessage(), FirebaseAppCheckErrorType.TokenIncorrectClaim);
+            throw new FirebaseAppCheckVerifyJwtException(
+                    e.getMessage(),
+                    FirebaseAppCheckVerifyJwtErrorType.INVALID_CLAIM_VALUE
+            );
         } catch (JWTVerificationException e) {
-            throw new FirebaseAppCheckVerifyJwtException(e.getMessage(), FirebaseAppCheckErrorType.GenericJwtVerificationError);
+            throw new FirebaseAppCheckVerifyJwtException(
+                    e.getMessage(),
+                    FirebaseAppCheckVerifyJwtErrorType.JWT_VERIFICATION_FAILED
+            );
         } catch (Exception e) {
-            throw new FirebaseAppCheckVerifyJwtException(e.getMessage(), FirebaseAppCheckErrorType.UnknownError);
+            throw new FirebaseAppCheckVerifyJwtException(
+                    e.getMessage(),
+                    FirebaseAppCheckVerifyJwtErrorType.UNKNOWN_ERROR
+            );
         }
     }
 }

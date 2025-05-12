@@ -1,8 +1,11 @@
 package com.github.danbel.spring.firebase.appcheck.core.interceptors;
 
 import com.github.danbel.spring.firebase.appcheck.core.annotations.RequireFirebaseAppCheck;
+import com.github.danbel.spring.firebase.appcheck.core.services.FirebaseAppCheckTokenVerifierService;
+import com.github.danbel.spring.firebase.appcheck.exception.FirebaseAppCheckErrorHandler;
+import com.github.danbel.spring.firebase.appcheck.exception.model.FirebaseAppCheckAdditionalSecurityCheckException;
 import com.github.danbel.spring.firebase.appcheck.exception.model.FirebaseAppCheckException;
-import com.github.danbel.spring.firebase.appcheck.exception.types.FirebaseAppCheckErrorType;
+import com.github.danbel.spring.firebase.appcheck.exception.model.FirebaseAppCheckTokenMissingException;
 import com.github.danbel.spring.firebase.appcheck.model.properties.FirebaseAppCheckProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,9 +23,17 @@ import org.springframework.web.util.pattern.PathPatternParser;
 public class FirebaseAppCheckInterceptor implements HandlerInterceptor {
 
     private final FirebaseAppCheckProperties config;
+    public final FirebaseAppCheckErrorHandler firebaseAppCheckErrorHandler;
+    private final FirebaseAppCheckTokenVerifierService firebaseAppCheckTokenVerifierService;
 
-    public FirebaseAppCheckInterceptor(FirebaseAppCheckProperties config) {
+    public FirebaseAppCheckInterceptor(
+            FirebaseAppCheckProperties config,
+            FirebaseAppCheckErrorHandler firebaseAppCheckErrorHandler,
+            FirebaseAppCheckTokenVerifierService firebaseAppCheckTokenVerifierService
+    ) {
         this.config = config;
+        this.firebaseAppCheckErrorHandler = firebaseAppCheckErrorHandler;
+        this.firebaseAppCheckTokenVerifierService = firebaseAppCheckTokenVerifierService;
     }
 
     /**
@@ -42,11 +53,12 @@ public class FirebaseAppCheckInterceptor implements HandlerInterceptor {
 
         String token = request.getHeader(config.getHeaderName());
         if (token == null) {
-            return config.getErrorHandler().handle(null, FirebaseAppCheckErrorType.MissingAppCheckToken, request, response, handler);
+            return firebaseAppCheckErrorHandler
+                    .handle(new FirebaseAppCheckTokenMissingException(), request, response, handler);
         }
 
         try {
-            var jwt = config.getTokenVerifierService().verifyFirebaseAppCheckToken(
+            var jwt = firebaseAppCheckTokenVerifierService.verifyFirebaseAppCheckToken(
                     token,
                     config.getProjectId(),
                     config.getProjectNumber(),
@@ -56,7 +68,8 @@ public class FirebaseAppCheckInterceptor implements HandlerInterceptor {
 
             if (config.getAdditionalSecurityCheck() != null &&
                     !config.getAdditionalSecurityCheck().evaluate(jwt)) {
-                return config.getErrorHandler().handle(null, FirebaseAppCheckErrorType.CustomSecurityConditionFailed, request, response, handler);
+                return firebaseAppCheckErrorHandler
+                        .handle(new FirebaseAppCheckAdditionalSecurityCheckException(), request, response, handler);
             }
 
             if (config.getAfterSecurityCheck() != null) {
@@ -64,7 +77,7 @@ public class FirebaseAppCheckInterceptor implements HandlerInterceptor {
             }
 
         } catch (FirebaseAppCheckException e) {
-            return config.getErrorHandler().handle(e, e.getErrorType(), request, response, handler);
+            return firebaseAppCheckErrorHandler.handle(e, request, response, handler);
         }
 
         return true;
