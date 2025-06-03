@@ -52,45 +52,40 @@ jacocoTestReport {
     }
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-
-            groupId = "io.github.danbeldev"
-            artifactId = "firebase-app-check-spring-boot-starter"
+mavenPublishing {
+    coordinates(
+            groupId = "io.github.danbeldev",
+            artifactId = "firebase-app-check-spring-boot-starter",
             version = "0.0.1"
+    )
 
-            pom {
-                name = "firebase-app-check-spring"
-                description = "Spring Boot Starter для интеграции Firebase App Check"
-                inceptionYear = "2024"
-                url = "https://github.com/danbeldev/firebase-app-check-spring"
+    pom {
+        name.set("firebase-app-check-spring-boot-starter")
+        description.set("Spring Boot Starter для интеграции Firebase App Check")
+        inceptionYear.set("2025")
+        url.set("https://github.com/danbeldev/firebase-app-check-spring")
 
-                licenses {
-                    license {
-                        name = "MIT"
-                        url = "https://opensource.org/licenses/MIT"
-                    }
-                }
-
-                developers {
-                    developer {
-                        id = "danbel"
-                        name = "Danila Belyakov"
-                        email = "dan.bel.89@bk.ru"
-                    }
-                }
-
-                scm {
-                    url = "https://github.com/danbeldev/firebase-app-check-spring"
-                }
+        licenses {
+            license {
+                name.set("MIT")
+                url.set("https://opensource.org/licenses/MIT")
             }
         }
-    }
-}
 
-mavenPublishing {
+        developers {
+            developer {
+                id.set("DanBel")
+                name.set("Danila Belyakov")
+                email.set("dan.bel.89@bk.ru")
+            }
+        }
+
+        scm {
+            url.set("https://github.com/danbeldev/firebase-app-check-spring")
+        }
+    }
+
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
     signAllPublications()
 }
