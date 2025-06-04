@@ -2,7 +2,9 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Last commit](https://img.shields.io/github/last-commit/danbeldev/firebase-app-check-spring)
+[![Download](https://img.shields.io/maven-central/v/io.github.danbeldev/firebase-app-check-spring-boot-starter/0.0.1)](https://central.sonatype.com/artifact/io.github.danbeldev/firebase-app-check-spring-boot-starter/0.0.1)
 [![Coverage](https://codecov.io/gh/danbeldev/firebase-app-check-spring/branch/master/graph/badge.svg)](https://codecov.io/gh/danbeldev/firebase-app-check-spring)
+
 
 Spring Boot Starter для интеграции [Firebase App Check](https://firebase.google.com/docs/app-check), обеспечивающий защиту ваших API endpoints.
 
